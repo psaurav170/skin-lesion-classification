@@ -37,17 +37,18 @@ This project provides a **complete end-to-end pipeline** including:
 
 ## 📂 Dataset Structure
 Dataset/
-├── Unbalanced Data/
-│ ├── Class_1/
-│ ├── Class_2/
-│ ├── Class_3/
+Dataset/n
+├── Unbalanced Data/n
+│ ├── Class_1/n
+│ ├── Class_2/n
+│ ├── Class_3/n
 │ └── ...
 │
-├── Balanced Data/
-│ ├── Class_1/
-│ ├── Class_2/
-│ ├── Class_3/
-│ └── ...
+└── Balanced Data/n
+├── Class_1/n
+├── Class_2/n
+├── Class_3/n
+└── ...
 
 
 - Images are RGB
