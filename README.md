@@ -1,220 +1,189 @@
-🩺 Skin Lesion Classification
+# 🧬 Skin Lesion Classification
 
-This repository contains a deep learning pipeline for multi-class Skin Lesion Classification using InceptionV3 with extensive data augmentation, class balancing, training, evaluation, and inference workflows.
-The project addresses class imbalance and evaluates the model using multiple robust metrics including Accuracy, Precision, Recall, AUC, PR-AUC, and F1-score.
+This repository implements a **deep learning–based skin lesion classification system** using **InceptionV3** with transfer learning.  
+The project addresses **class imbalance** through **offline data augmentation**, performs **robust training and evaluation**, and supports **single-image inference**.
 
-📌 Project Overview
+---
 
-Skin lesion datasets are often highly imbalanced, which negatively impacts model performance.
-This project follows a two-stage approach:
+## 📌 Project Overview
 
-Unbalanced Data Analysis
+Skin lesion datasets are often highly unbalanced, which can significantly degrade model performance.  
+This project provides a **complete end-to-end pipeline** including:
 
-Visualize class distribution using donut pie charts.
+- Class distribution analysis
+- Dataset balancing using image augmentation
+- Model training with transfer learning
+- Advanced performance evaluation (F1-score, AUC, PR-AUC)
+- Confusion matrix visualization
+- Interactive prediction on new images
 
-Balanced Dataset Creation
+---
 
-Perform aggressive image augmentation to balance all classes.
+## 🧠 Model Architecture
 
-Deep Learning Training
+- **Base Model**: InceptionV3 (ImageNet pretrained)
+- **Frozen Layers**: First 100 layers
+- **Custom Classification Head**:
+  - Global Average Pooling
+  - Dense (1024 units, ReLU)
+  - Batch Normalization
+  - Dropout (0.5)
+  - Dense Softmax (8 classes)
 
-Fine-tune InceptionV3 (ImageNet pretrained).
+- **Optimizer**: Adam (`lr = 0.0001`)
+- **Loss Function**: Categorical Crossentropy
 
-Model Evaluation & Visualization
+---
 
-Metrics curves, confusion matrix, and inference on user images.
-
-🧠 Model Architecture
-
-Base Model: InceptionV3 (pretrained on ImageNet)
-
-Top Layers:
-
-Global Average Pooling
-
-Dense (1024, ReLU)
-
-Batch Normalization
-
-Dropout (0.5)
-
-Softmax Output (8 classes)
-
-Frozen Layers: First 100 layers
-
-📁 Directory Structure
-E:/
+## 📂 Dataset Structure
+Dataset/
+├── Unbalanced Data/
+│ ├── Class_1/
+│ ├── Class_2/
+│ ├── Class_3/
+│ └── ...
 │
-├── New/
-│   ├── Unbalanced Data/
-│   │   └── class_1/, class_2/, ...
-│   │
-│   ├── Balanced Data/
-│   │   └── class_1/, class_2/, ...
-│   │
-│   ├── Balanced_2 Data/
-│   │   └── augmented images
-│   │
-│   ├── Trained Models/
-│   │   └── Balanced/
-│   │       ├── InceptionV3.h5
-│   │       └── InceptionV3_New.h5
-
-📦 Requirements
-
-Install the required libraries:
-
-pip install tensorflow keras numpy matplotlib seaborn pandas scikit-learn
+├── Balanced Data/
+│ ├── Class_1/
+│ ├── Class_2/
+│ ├── Class_3/
+│ └── ...
 
 
-Recommended:
+- Images are RGB
+- Resized to **224 × 224**
+- 8 total classes
 
-Python ≥ 3.8
+---
 
-TensorFlow ≥ 2.10
+## 📊 Class Imbalance Analysis
 
-GPU support (optional but recommended)
+### Unbalanced Dataset
+- Class distributions visualized using a **doughnut pie chart**
+- Highlights severe imbalance in raw data
 
-🖼️ Dataset Preparation
-1️⃣ Unbalanced Dataset
+### Balanced Dataset
+- Each class augmented to **6000 images**
+- Re-visualized using a doughnut pie chart
+- Ensures uniform class representation
 
-Load images using ImageDataGenerator
+---
 
-Perform basic augmentation
+## 🔄 Data Augmentation Strategy
 
-Visualize class imbalance using donut pie chart
+Offline augmentation is performed to balance the dataset and prevent overfitting.
 
-2️⃣ Balanced Dataset Creation
+**Augmentation Techniques:**
+- Rotation
+- Width & height shifting
+- Shearing
+- Zooming
+- Horizontal & vertical flips
+- Brightness adjustment
+- Channel shifting
 
-Each class is expanded to 6000 images
+All augmented images are saved to disk to create a persistent balanced dataset.
 
-Augmentations include:
+---
 
-Rotation
+## ⚙️ Training Configuration
 
-Width & height shifts
+| Parameter | Value |
+|--------|------|
+| Image Size | 224 × 224 |
+| Batch Size | 32 |
+| Epochs | 35 |
+| Validation Split | 20% |
+| Optimizer | Adam |
+| Learning Rate | 0.0001 |
+| Class Weights | Enabled |
+| Early Stopping | Enabled |
+| Reduce LR on Plateau | Enabled |
+| Model Checkpoint | Enabled |
 
-Zoom
+---
 
-Shear
+## 📈 Evaluation Metrics
 
-Horizontal & vertical flip
+The model is evaluated using multiple performance metrics:
 
-Brightness adjustment
+- Accuracy
+- Precision
+- Recall
+- ROC-AUC
+- PR-AUC
+- **Custom F1-score**
 
-Channel shifting
-
-Balanced dataset statistics are again visualized using a donut pie chart.
-
-🔁 Training Pipeline
-Image Preprocessing
-
-Images resized to 224 × 224
-
-InceptionV3 preprocessing applied
-
-preprocess_input
-
-Loss & Optimizer
-
-Loss: Categorical Crossentropy
-
-Optimizer: Adam (LR = 0.0001)
-
-Metrics Tracked
-
-Accuracy
-
-Precision
-
-Recall
-
-ROC-AUC
-
-PR-AUC
-
-Custom F1-Score
-
-🧮 Class Weighting
-
-Class weights are computed to further mitigate residual imbalance:
-
-class_weights = total_samples / (num_classes * samples_per_class)
-
-⏹️ Callbacks Used
-
-ModelCheckpoint – saves best model
-
-EarlyStopping – prevents overfitting
-
-ReduceLROnPlateau – adaptive learning rate
-
-📈 Evaluation & Visualization
-
+### Training Curves
 The following plots are generated:
+- Training vs Validation Accuracy
+- Training vs Validation Loss
+- Precision Curve
+- Recall Curve
+- ROC-AUC Curve
+- PR-AUC Curve
+- F1-score Curve
 
-Training vs Validation:
+---
 
-Accuracy
+## 🔍 Confusion Matrix
 
-Loss
+A detailed confusion matrix is generated to analyze:
 
-Precision
+- Correct classifications
+- Misclassifications between lesion types
+- Class-wise performance breakdown
 
-Recall
+---
 
-AUC
+## 🖼️ Single Image Inference
 
-PR-AUC
+The trained model supports real-time inference on new images.
 
-F1-Score
+**Process:**
+1. User inputs image file path
+2. Image is preprocessed (224 × 224)
+3. Model predicts the lesion class
+4. Output image is displayed with:
+   - True label (from folder structure)
+   - Predicted label
 
-Confusion Matrix (8 × 8)
+---
 
-🔍 Inference (Single Image Prediction)
+## 💾 Saved Models
 
-The trained model supports real-time prediction for any image path:
+| Model | Description |
+|------|------------|
+| `InceptionV3.h5` | Initial balanced dataset training |
+| `InceptionV3_New.h5` | Optimized training with LR scheduling and F1 monitoring |
 
-Enter image file path: E:/test_image.jpg
+Models are saved automatically based on **best validation F1-score**.
 
+---
 
-The output displays:
+## ⏱️ Training Time Logging
 
-Predicted class name
+The script records:
+- Total execution time
+- Hours, minutes, and seconds
 
-Input image visualization
+This helps evaluate computational efficiency.
 
-✅ Final Outputs
+---
 
-Best Model Saved As:
+## 🧪 Technologies Used
 
-InceptionV3.h5
+- Python
+- TensorFlow / Keras
+- NumPy
+- Matplotlib
+- Seaborn
+- scikit-learn
 
-InceptionV3_New.h5
+---
 
-Fully reproducible training & inference pipeline
+## 🚀 How to Run
 
-Balanced dataset generation included
-
-🚀 Key Highlights
-
-✔ Handles severe class imbalance
-✔ Strong augmentation strategy
-✔ Multi-metric evaluation
-✔ Pretrained transfer learning
-✔ Production-ready inference code
-
-📌 Future Improvements
-
-Cross-validation
-
-Grad-CAM visualizations
-
-Ensemble models (DenseNet / ResNet)
-
-Deployment via Flask / FastAPI
-
-👨‍💻 Author
-
-Saurav Patel
-Machine Learning | Deep Learning | Medical Imaging
+1. **Install dependencies**
+   ```bash
+   pip install tensorflow numpy matplotlib seaborn scikit-learn
